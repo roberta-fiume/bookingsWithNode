@@ -22,6 +22,14 @@ app.post('/user', (req, res) => {
     Bookings.create(req.body)
         .then(user => res.send(user)
     )
+});
+
+app.put('/user/:id', (req, res) => {
+    const id = req.params.id;
+    Bookings.update(req.body, {
+        where: { id: id }
+    }).then(user => res.send(user)
+    );
 })
 
 

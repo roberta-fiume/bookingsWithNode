@@ -32,6 +32,18 @@ app.put('/user/:id', (req, res) => {
     );
 })
 
+// app.delete('/user/:id', (req, res) => {
+//   const id = req.params.id;
+//     Bookings.destroy(req.body, {
+//         where: { id: id }
+//     })
+//     .then(user => res.send("user deleted")
+//     )
+//     .catch(err => {
+//         console.log("this is the error", err);
+//     });
+// });
+
 
 //TODO: refactor into its own file 
 // var mysql = require('mysql');

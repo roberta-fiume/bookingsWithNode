@@ -3,12 +3,11 @@ module.exports = (sequelize, type) => {
         id: {
           type: type.INTEGER,
           primaryKey: true,
-          autoIncrement: true
+          autoIncrement: true,
+          defaultValue: null
         },
-        firstname: type.STRING,
-        lastname: type.STRING,
-        email: type.STRING,
-        booking_date: {
+        user_id: type.INTEGER,
+        date: {
             type: type.DATE,
             allowNull: false,
             defaultValue: null

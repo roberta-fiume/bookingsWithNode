@@ -3,3 +3,5 @@ runtime: nodejs12
 network:
   forwarded_ports:
     - 8080/tcp
+
+service: booking-ms

@@ -23,7 +23,7 @@ app.post('/user', (req, res) => {
         .then(user => res.send(user)
     )
     .catch( err => {
-    console.log("THIS IS THE ERROR:",err, req.body);
+    console.log("ERROR:",err, req.body);
     });
 });
 

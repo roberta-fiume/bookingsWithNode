@@ -23,7 +23,7 @@ app.post('/user', (req, res) => {
         .then(user => res.send(user)
     )
     .catch( err => {
-    console.log("ERROR:",err, req.body);
+        res.status(500).send("Oops...Something went wrong!");
     });
 });
 

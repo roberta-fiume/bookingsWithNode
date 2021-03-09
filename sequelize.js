@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const UserModel = require('./models/user');
+const BookingModel = require('./models/bookings');
 require('dotenv').config();
 
 // const sequelize = new Sequelize('bookings', 'roberta', '1234', {
@@ -30,7 +30,7 @@ sequelize.authenticate()
 
 
 
-const Bookings = UserModel(sequelize, Sequelize);
+const Bookings = BookingModel(sequelize, Sequelize);
 
 module.exports = {
   Bookings,

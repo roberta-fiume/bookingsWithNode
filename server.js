@@ -1,18 +1,7 @@
-
-/**
- * App Variables
- */
-
- const app = express();
-
- app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}...`);
-  });
-
 const express = require('express');
 const cors = require('cors');
 var bodyParser = require('body-parser');
-
+const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -22,19 +11,16 @@ app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
-
-
-const expressSession = require("express-session");
-const passport = require("passport");
-const Auth0Strategy = require("passport-auth0");
 require('dotenv').config();
 
 const PORT = process.env.PORT || 8080;
-
-
-const path = require("path");
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}...`);
+});
 
 const { auth } = require('express-openid-connect');
+
+const { requiresAuth } = require('express-openid-connect');
 
 const config = {
   authRequired: false,
@@ -47,6 +33,34 @@ const config = {
 
 app.use(auth(config));
 
+// PASSPORT CONGIGURATION
+
+const strategy = new Auth0Strategy(
+    {
+      domain: process.env.AUTH0_DOMAIN,
+      clientID: process.env.AUTH0_CLIENT_ID,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET,
+      callbackURL: process.env.AUTH0_CALLBACK_URL
+    },
+    function(accessToken, refreshToken, extraParams, profile, done) {
+      /**
+       * Access tokens are used to authorize users to an API
+       * (resource server)
+       * accessToken is the token to call the Auth0 API
+       * or a secured third-party API
+       * extraParams.id_token has the JSON Web Token
+       * profile has all the information from the user
+       */
+      return done(null, profile);
+    }
+  );
+
+
+
+
+
+
+
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
@@ -55,7 +69,7 @@ app.get('/profile', requiresAuth(), (req, res) => {
     res.send(JSON.stringify(req.oidc.user));
   });
 
-
+// Listen to the App Engine-specified port, or 8080 otherwise
 
 const { Bookings } = require('./sequelize');
 

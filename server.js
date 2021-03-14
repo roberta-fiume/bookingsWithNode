@@ -18,6 +18,28 @@ app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}...`);
 });
 
+var session = require('express-session');
+
+// config express-session
+var sess = {
+  secret: process.env.AUTH0_CLIENT_SECRET,
+  cookie: {},
+  resave: false,
+  saveUninitialized: true
+};
+
+if (app.get('env') === 'production') {
+  // Use secure cookies in production (requires SSL/TLS)
+  sess.cookie.secure = true;
+
+  // Uncomment the line below if your application is behind a proxy (like on Heroku)
+  // or if you're encountering the error message:
+  // "Unable to verify authorization request state"
+  // app.set('trust proxy', 1);
+}
+
+app.use(session(sess));
+
 const { auth } = require('express-openid-connect');
 
 const { requiresAuth } = require('express-openid-connect');
@@ -34,6 +56,10 @@ const config = {
 app.use(auth(config));
 
 // PASSPORT CONGIGURATION
+
+const passport = require('passport');
+
+const Auth0Strategy = require('passport-auth0');
 
 const strategy = new Auth0Strategy(
     {
@@ -53,7 +79,21 @@ const strategy = new Auth0Strategy(
        */
       return done(null, profile);
     }
-  );
+);
+
+passport.use(strategy);
+app.use(passport.initialize());
+app.use(passport.session());
+
+// You can use this section to keep a smaller payload
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+
 
 
 

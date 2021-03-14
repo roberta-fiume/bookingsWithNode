@@ -37,7 +37,7 @@ router.get("/callback", (req, res, next) => {
       });
     })(req, res, next);
   });
-  
+
 
   router.get("/logout", (req, res) => {
     req.logOut();
@@ -64,3 +64,5 @@ router.get("/callback", (req, res, next) => {
   
     res.redirect(logoutURL);
   });
+
+  //try 

@@ -13,6 +13,13 @@ app.all('/*', function(req, res, next) {
 });
 require('dotenv').config();
 
+const { Bookings } = require('./sequelize');
+
+
+const jwt = require('express-jwt');
+const jwtAuthz = require('express-jwt-authz');
+const jwksRsa = require('jwks-rsa');
+
 const authRouter = require("./auth");
 
 const PORT = process.env.PORT || 8080;
@@ -82,9 +89,9 @@ const strategy = new Auth0Strategy(
       return done(null, profile);
     }
 );
-app.set("views", path.join(__dirname, "views"));
-app.use(express.static(path.join(__dirname, "public")));
-app.set("view engine", "pug");
+// app.set("views", path.join(__dirname, "views"));
+// app.use(express.static(path.join(__dirname, "public")));
+// app.set("view engine", "pug");
 passport.use(strategy);
 app.use(passport.initialize());
 
@@ -105,23 +112,22 @@ app.use("/", authRouter);
 
 
 
+const checkJwt = jwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://dev-23ynikm5.eu.auth0.com/.well-known/jwks.json`
+  }),
+  audience: 'https://supermarket.com',
+  issuer: `https://dev-23ynikm5.eu.auth0.com/`,
+  algorithms: ['RS256']
+});
 
+const checkScopes = jwtAuthz([ 'read:bookings']);
 
-
-
-// app.get('/', (req, res) => {
-//   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-// });
-
-// app.get('/profile', requiresAuth(), (req, res) => {
-//     res.send(JSON.stringify(req.oidc.user));
-//   });
-
-// Listen to the App Engine-specified port, or 8080 otherwise
-
-const { Bookings } = require('./sequelize');
-
-app.get('/', (req, res) => {
+app.get('/', checkJwt, checkScopes, (req, res) => {
+  console.log(JSON.stringify(req.headers));
     Bookings.findAll().then(bookings => 
         res.send(bookings));
 });

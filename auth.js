@@ -65,3 +65,4 @@ router.get("/callback", (req, res, next) => {
     res.redirect(logoutURL);
   });
 
+  module.exports = router;

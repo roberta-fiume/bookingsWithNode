@@ -13,6 +13,8 @@ app.all('/*', function(req, res, next) {
 });
 require('dotenv').config();
 
+const authRouter = require("./auth");
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}...`);
@@ -80,10 +82,15 @@ const strategy = new Auth0Strategy(
       return done(null, profile);
     }
 );
-
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
+app.set("view engine", "pug");
 passport.use(strategy);
 app.use(passport.initialize());
+
 app.use(passport.session());
+
+
 
 // You can use this section to keep a smaller payload
 passport.serializeUser(function (user, done) {
@@ -94,6 +101,7 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
+app.use("/", authRouter);
 
 
 
@@ -101,13 +109,13 @@ passport.deserializeUser(function (user, done) {
 
 
 
-app.get('/', (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-});
+// app.get('/', (req, res) => {
+//   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+// });
 
-app.get('/profile', requiresAuth(), (req, res) => {
-    res.send(JSON.stringify(req.oidc.user));
-  });
+// app.get('/profile', requiresAuth(), (req, res) => {
+//     res.send(JSON.stringify(req.oidc.user));
+//   });
 
 // Listen to the App Engine-specified port, or 8080 otherwise
 

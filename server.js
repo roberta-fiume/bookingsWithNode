@@ -139,7 +139,7 @@ app.post('/booking', checkScopesPost, (req, res) => {
         .then(user => res.send(user)
     )
     .catch( err => {
-      console.log("errorrrr", err);
+      console.log("ERROR", err);
         res.status(500).send("Oops...Something went wrong!");
     });
 });

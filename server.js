@@ -124,19 +124,22 @@ const checkJwt = jwt({
   algorithms: ['RS256']
 });
 
-const checkScopes = jwtAuthz([ 'read:bookings']);
+const checkScopesGet = jwtAuthz(['read:bookings']);
 
-app.get('/', checkJwt, checkScopes, (req, res) => {
+app.get('/', checkJwt, checkScopesGet, (req, res) => {
   console.log(JSON.stringify(req.headers));
     Bookings.findAll().then(bookings => 
         res.send(bookings));
 });
 
-app.post('/booking', (req, res) => {
+const checkScopesPost = jwtAuthz(['write:bookings']);
+
+app.post('/booking', checkScopesPost, (req, res) => {
     Bookings.create(req.body)
         .then(user => res.send(user)
     )
     .catch( err => {
+      console.log("errorrrr", err);
         res.status(500).send("Oops...Something went wrong!");
     });
 });

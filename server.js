@@ -129,12 +129,14 @@ const checkScopesGet = jwtAuthz(['read:bookings']);
 app.get('/', checkJwt, checkScopesGet, (req, res) => {
   console.log(JSON.stringify(req.headers));
     Bookings.findAll().then(bookings => 
-        res.send(bookings));
+      res.send(bookings)
+    );
 });
 
 const checkScopesPost = jwtAuthz(['write:bookings']);
 
-app.post('/booking', checkScopesPost, (req, res) => {
+app.post('/booking', checkJwt, checkScopesPost, (req, res) => {
+  console.log(JSON.stringify("HEADERS",req.headers));
     Bookings.create(req.body)
         .then(user => res.send(user)
     )

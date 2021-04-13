@@ -6,7 +6,7 @@ module.exports = (sequelize, type) => {
           autoIncrement: true,
           defaultValue: null
         },
-        user_id: type.INTEGER,
+        user_id: type.STRING,
         date: {
             type: type.DATE,
             allowNull: false,
@@ -15,3 +15,21 @@ module.exports = (sequelize, type) => {
     },
   )
 }
+
+// module.exports = (sequelize, type) => {
+//   return sequelize.define('users', {
+//       id: {
+//         type: type.INTEGER,
+//         primaryKey: true,
+//         autoIncrement: true,
+//         defaultValue: null
+//       },
+//       user_id: type.STRING,
+//       date: {
+//           type: type.DATE,
+//           allowNull: false,
+//           defaultValue: null
+//       }
+//   },
+// )
+// }

@@ -15,6 +15,8 @@ require('dotenv').config();
 
 const { Bookings } = require('./sequelize');
 
+const { Users } = require('./sequelize');
+
 
 const jwt = require('express-jwt');
 const jwtAuthz = require('express-jwt-authz');

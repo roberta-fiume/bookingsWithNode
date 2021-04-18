@@ -13,9 +13,21 @@ app.all('/*', function(req, res, next) {
 });
 require('dotenv').config();
 
+const db = require('./sequelize');
+
+
+
 const { Bookings } = require('./sequelize');
 
 const { Users } = require('./sequelize');
+
+// db.sequelize.sync().then(() => {
+//     app.listen(PORT, () => {
+//     console.log(`Server listening on port ${PORT}...`);
+//   });
+// })
+
+
 
 
 const jwt = require('express-jwt');
@@ -54,7 +66,7 @@ app.get('/', checkJwt, checkScopesGet, (req, res) => {
     });
 });
 
-const checkScopesPost = jwtAuthz(['write:bookings']);
+const checkScopesPost = jwtAuthz(['write:bookings', 'write:users']);
 
 app.post('/booking', checkJwt, checkScopesPost, (req, res) => {
   console.log(JSON.stringify("HEADERS",req.headers));
@@ -64,6 +76,18 @@ app.post('/booking', checkJwt, checkScopesPost, (req, res) => {
     .catch( err => {
       console.log("ERROR", err);
         res.status(500).send("Oops...Something went wrong!");
+    });
+});
+
+
+app.post('/user', checkJwt, checkScopesPost, (req, res) => {
+  console.log(JSON.stringify("HEADERS",req.headers));
+    Users.create(req.body)
+        .then(user => res.send(user)
+    )
+    .catch( err => {
+      console.log("ERROR", err);
+        res.status(500).send("Oops...Something went wrong for the user!");
     });
 });
 

@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const BookingModel = require('./models/bookings');
+const UserModel = require('./models/users');
 require('dotenv').config();
 
 // const sequelize = new Sequelize('bookings', 'roberta', '1234', {
@@ -30,8 +31,22 @@ sequelize.authenticate()
 
 
 
+sequelize.sync().then(() => {
+    console.log("IT'S SYNCED");
+    //     app.listen(PORT, () => {
+    //     console.log(`Server listening on port ${PORT}...`);
+    //   });
+}).catch(err => {
+    console.log("ERROR IN SYNCING", err);
+})
+
+
+
 const Bookings = BookingModel(sequelize, Sequelize);
+
+const Users = UserModel(sequelize, Sequelize);
 
 module.exports = {
   Bookings,
+  Users
 }

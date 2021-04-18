@@ -1,9 +1,13 @@
+const Bookings = require('../models/bookings.js');
+
 module.exports = (sequelize, type) => {
-  return sequelize.define('users', {
-      user_id: {
+  const Users = sequelize.define('users', {
+        id: {
         type: type.STRING,
         autoincrement: false,
-        defaultValue: null
+        primaryKey: true,
+        allowNull: false,
+        // defaultValue: null
       },
       name: {
           type: type.STRING,
@@ -13,6 +17,21 @@ module.exports = (sequelize, type) => {
           type: type.STRING,
           defaultValue: null
       }
-  },
-)
-}
+  });
+
+    // {
+    //   classMethods:{
+    //           associate:function(models){
+    //               Users.hasMany(models.Bookings, { foreignKey: 'user_id'} );
+    //           }
+    //       }
+    //   }
+ 
+
+    Users.associate = models => {
+        Users.hasMany(models.Bookings, {foreignKey: 'id', onDelete: 'SET NULL', onUpdate: 'CASCADE'});
+    }
+
+  return Users;
+
+};

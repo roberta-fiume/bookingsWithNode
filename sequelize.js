@@ -29,10 +29,11 @@ sequelize.authenticate()
             console.log('Unable to connect to the database');
         });
 
-
+// let syncOptions = { force: true };
 
 sequelize.sync().then(() => {
     console.log("IT'S SYNCED");
+    // const PORT = process.env.PORT || 8080;
     //     app.listen(PORT, () => {
     //     console.log(`Server listening on port ${PORT}...`);
     //   });
@@ -45,6 +46,27 @@ sequelize.sync().then(() => {
 const Bookings = BookingModel(sequelize, Sequelize);
 
 const Users = UserModel(sequelize, Sequelize);
+
+  
+      Users.hasMany(Bookings, { 
+        foreignKey: 
+        { 
+          allowNull: false 
+        },
+        onDelete: 'CASCADE'
+      });
+    
+
+      Bookings.belongsTo(Users, { foreignKey: 
+        { 
+          allowNull: false 
+        }
+      });
+    
+
+// Bookings.belongsTo(Users);
+
+// Users.hasMany(Bookings);
 
 module.exports = {
   Bookings,

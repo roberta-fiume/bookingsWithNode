@@ -52,7 +52,7 @@ const checkJwt = jwt({
   algorithms: ['RS256']
 });
 
-const checkScopesGet = jwtAuthz(['read:bookings']);
+const checkScopesGet = jwtAuthz(['read:bookings', 'read:users']);
 
 app.get('/', checkJwt, checkScopesGet, (req, res) => {
   console.log(JSON.stringify(req.headers));
@@ -65,6 +65,47 @@ app.get('/', checkJwt, checkScopesGet, (req, res) => {
         .json({ code: err.code, err: error.message });
     });
 });
+
+
+// app.get('/getuser', checkJwt, checkScopesGet, (req, res) => {
+//   Users.findAll({
+//     include: [{
+//       model: Bookings,
+//       attributes: ['id', 'user_id', 'date']  
+//     }],
+//   }).then(response => {
+//       console.log("THESE ARE ALL THE BOOKINGS",response);
+//       res.send({response});
+//     }).catch(function(err){
+//       console.log('Oops! something went wrong in getting the bookings, : ', err);
+//     });
+// })
+
+app.get('/getbookings/:userId', checkJwt, checkScopesGet, (req, res) => {
+  const userId = req.params.userId;
+  Bookings.findAll({
+    where: { userId: req.params.userId },
+    include: [{
+      model: Users,
+    }],
+  }).then(response => {
+    console.log("THESE ARE ALL THE USER BOOKINGS",response);
+    res.send({response});
+  }).catch(function(err){
+    console.log('Oops! something went wrong in getting the  USER bookings,:',err);
+  });
+})
+
+// app.get("/tour/:id", function(req, res) {
+//  Users.findOne({
+//     where: { id: req.params.id },
+//     include: [db.Location]
+//   }).then(function(tour) {
+//     res.render("tour", {
+//       tour: tour
+//     });
+//   });
+// });
 
 const checkScopesPost = jwtAuthz(['write:bookings', 'write:users']);
 

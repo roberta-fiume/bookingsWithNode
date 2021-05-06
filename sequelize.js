@@ -48,25 +48,21 @@ const Bookings = BookingModel(sequelize, Sequelize);
 const Users = UserModel(sequelize, Sequelize);
 
   
-      Users.hasMany(Bookings, { 
-        foreignKey: 
-        { 
-          allowNull: false 
-        },
-        onDelete: 'CASCADE'
-      });
+//       Users.hasMany(Bookings, { 
+//         foreignKey: 'userId',
+//         onDelete: 'CASCADE'
+//       });
     
 
-      Bookings.belongsTo(Users, { foreignKey: 
-        { 
-          allowNull: false 
-        }
-      });
+//       Bookings.belongsTo(Users, {
+//       });
     
 
-// Bookings.belongsTo(Users);
+// Bookings.belongsTo(Users, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }
+// );
 
 // Users.hasMany(Bookings);
+
 
 module.exports = {
   Bookings,

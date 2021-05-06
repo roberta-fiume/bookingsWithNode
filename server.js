@@ -81,31 +81,33 @@ app.get('/', checkJwt, checkScopesGet, (req, res) => {
 //     });
 // })
 
-app.get('/getbookings/:userId', checkJwt, checkScopesGet, (req, res) => {
-  const userId = req.params.userId;
-  Bookings.findAll({
-    where: { userId: req.params.userId },
-    include: [{
-      model: Users,
-    }],
-  }).then(response => {
-    console.log("THESE ARE ALL THE USER BOOKINGS",response);
-    res.send({response});
-  }).catch(function(err){
-    console.log('Oops! something went wrong in getting the  USER bookings,:',err);
-  });
-})
+// app.get('/getbookings/:userId', checkJwt, checkScopesGet, (req, res) => {
+//   const userId = req.params.userId;
+//   Bookings.findAll({
+//     where: { userId: req.params.userId },
+//     include: [{
+//       model: Users,
+//     }],
+//   }).then(response => {
 
-// app.get("/tour/:id", function(req, res) {
-//  Users.findOne({
-//     where: { id: req.params.id },
-//     include: [db.Location]
-//   }).then(function(tour) {
-//     res.render("tour", {
-//       tour: tour
-//     });
+//     console.log("THESE ARE ALL THE USER BOOKINGS",response);
+//     res.send({response});
+//   })
+//   .catch(function(err){
+//     console.log('Oops! something went wrong in getting the  USER bookings,:',err);
 //   });
-// });
+// })
+
+
+app.get('/getbookings/:userId', checkJwt, checkScopesGet, (req, res) => {
+ Bookings.findAll({
+    where: { userId: req.params.userId },
+  }).then( response => {
+    res.send(response)
+  }).catch(function(err){
+          console.log('Oops! something went wrong in getting the bookings, : ', err);
+    });
+});
 
 const checkScopesPost = jwtAuthz(['write:bookings', 'write:users']);
 
@@ -122,7 +124,6 @@ app.post('/booking', checkJwt, checkScopesPost, (req, res) => {
 
 
 app.post('/user', checkJwt, checkScopesPost, (req, res) => {
-  console.log(JSON.stringify("HEADERS",req.headers));
     Users.create(req.body)
         .then(user => res.send(user)
     )

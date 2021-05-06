@@ -7,38 +7,25 @@ module.exports = (sequelize, type) => {
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
-        // defaultValue: null
       },
-      // userId:  {
-      //   type: type.STRING,
-      //   allowNull: false,
-      //   // primaryKey: true,
-      // },
+      userId:  {
+        type: type.STRING,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'userId',
+        }
+      },
       date: {
-          type: type.DATE,
-          // allowNull: false,
-          defaultValue: null
+        type: type.DATE,
+        allowNull: false,
       },
 
     
     }
-      // {
-      //   classMethods:{
-      //       associate:function(models){
-      //           bookings.belongsTo(models.Users, { foreignKey:'user_id', onDelete: 'SET NULL', onUpdate: 'CASCADE'} );
-      //       }
-      //   }
-      // }
-
-    );
-
-    // Bookings.associate = function(models){
-    //   Bookings.belongsTo(models.Users, { foreignKey: 
-    //     { 
-    //       allowNull: false 
-    //     }
-    //   });
-    // }
+  );
    return Bookings
 }
+
+
 
